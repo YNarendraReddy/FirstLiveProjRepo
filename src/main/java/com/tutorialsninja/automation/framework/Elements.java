@@ -1,246 +1,240 @@
 package com.tutorialsninja.automation.framework;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.tutorialsninja.automation.base.Base;
 
 public class Elements {
 
-	public Logger log = Logger.getLogger(Elements.class);
+    public static final Logger log = LogManager.getLogger(Elements.class);
 
-	public static void TypeText(WebElement element, String data) {
-		element.sendKeys(data);
-	}
+    private static WebDriverWait getWait(int seconds) {
+        return new WebDriverWait(Base.driver, Duration.ofSeconds(seconds));
+    }
 
-	public static void TypeTextIfElementPresent(WebElement element, String data) {
-		if (element.isDisplayed()) {
-			element.sendKeys(data);
-		}
-	}
+    // ------------------ Textbox Methods ------------------
+    public static void typeText(WebElement element, String data) {
+        element.sendKeys(data);
+    }
 
-	public static void clearTxtBox(WebElement element) {
-		element.clear();
-	}
+    public static void typeTextIfVisible(WebElement element, String data) {
+        if (isDisplayed(element)) {
+            element.sendKeys(data);
+        }
+    }
 
-	public static void typeRandomNumber(WebElement element, int data) {
-		Random random = new Random();
-		int rn = random.nextInt(100);
-		String randomNumber = Integer.toString(rn);
-		element.sendKeys(randomNumber);
-	}
+    public static void clearTextBox(WebElement element) {
+        element.clear();
+    }
 
-	public static String getTextBoxValue(WebElement element) {
-		return element.getAttribute("value");
-	}
-	
-	public static String getText(WebElement element){
-		return element.getText();
-	}
-	
-	public static boolean VerifyTextEquals(WebElement element,String expected){
-		boolean flag=false;
-		if(element.getText().equals(expected))
-			return flag=true;
-		return flag;
-	}
-	
-	public static String getTitle(){
-		return Base.driver.getTitle();
-	}
-	
-	public String getCurrentUrl(){
-		return Base.driver.getCurrentUrl();
-	}
+    public static void typeRandomNumber(WebElement element, int max) {
+        Random random = new Random();
+        int rn = random.nextInt(max);
+        element.sendKeys(Integer.toString(rn));
+    }
 
-	public boolean isSelected(WebElement element) {
-		if (element.isSelected()) 
-			return true;
-		return false;
-	}
+    public static String getTextBoxValue(WebElement element) {
+        return element.getAttribute("value");
+    }
 
-	public void selectCheckBox(WebElement element) {
-		if (!isSelected(element))
-			element.click();
-	}
+    public static String getText(WebElement element) {
+        return element.getText();
+    }
 
-	public void deSelectCheckbox(WebElement element) {
-		if (isSelected(element))
-			element.click();
-	}
+    public static boolean verifyTextEquals(WebElement element, String expected) {
+        return element.getText().equals(expected);
+    }
 
-	public void selectRadioButton(WebElement element) {
-		if (!isSelected(element))
-			element.click();
-	}
+    public static String getTitle() {
+        return Base.driver.getTitle();
+    }
 
-	public void deSelectRadioButton(WebElement element) {
-		if (isSelected(element))
-			element.click();
-	}
-	
-	public boolean isEnabled(WebElement element){
-		if(element.isEnabled())
-			return true;
-		return false;
-	}
-	
-	public boolean isDisplayed(WebElement element){
-		if(element.isDisplayed())
-			return true;
-		return false;
-	}
-	
-	public void selectByText(WebElement element,String text){
-		Select select=new Select(element);
-		select.selectByVisibleText(text);
-	}
-	
-	public void selectByIndex(WebElement element,int index){
-		Select select=new Select(element);
-		select.selectByIndex(index);
-	}
-	
-	public void selectByValue(WebElement element,String value){
-		Select select=new Select(element);
-		select.selectByValue(value);
-	}
-	
-	public String getFirstSelectedOption(WebElement element){
-		Select select=new Select(element);
-		return select.getFirstSelectedOption().getText();
-	}
-	
-	public List<WebElement> getAllSelectedOptions(WebElement element){
-		Select select=new Select(element);
-		return select.getAllSelectedOptions();
-		}
-	
-	public List<WebElement> getAllOptions(WebElement element){
-		Select select=new Select(element);
-		return select.getOptions();
-	}
-	
-	public void deSelectByText(WebElement element,String text){
-		Select select=new Select(element);
-		select.deselectByVisibleText(text);
-	}
-	
-	public void deSelectByIndex(WebElement element,int index){
-		Select select=new Select(element);
-		select.deselectByIndex(index);
-	}
-	
-	public void deSelectByValue(WebElement element,String value){
-		Select select=new Select(element);
-		select.deselectByValue(value);
-	}
-	
-	public void click(WebElement element){
-		Waits.waitUntil(() ->isDisplayed(element));
-		element.click();
-	}
-	
-	public void clickOnlyIfElementPresent(WebElement element){
-		if(isDisplayed(element))
-			element.click();
-	}
-	
-	public Alert getAlert() {
-		return Base.driver.switchTo().alert();
-	}
-	
-	public void AcceptAlert() {
-		getAlert().accept();
-	}
-	
-	public void DismissAlert() {
-		getAlert().dismiss();
-	}
+    public static String getCurrentUrl() {
+        return Base.driver.getCurrentUrl();
+    }
 
-	public String getAlertText() {
-		String text = getAlert().getText();
-		return text;
-	}
+    // ------------------ Checkbox / Radio ------------------
+    public static boolean isSelected(WebElement element) {
+        return element.isSelected();
+    }
 
-	public boolean isAlertPresent() {
-		try {
-			Base.driver.switchTo().alert();
-			return true;
-		} catch (NoAlertPresentException e) {
-			return false;
-		}
-	}
+    public static void selectCheckBox(WebElement element) {
+        if (!isSelected(element))
+            element.click();
+    }
 
-	public void AcceptAlertIfPresent() {
-		if (!isAlertPresent())
-			return;
-		AcceptAlert();
-	}
+    public static void deselectCheckBox(WebElement element) {
+        if (isSelected(element))
+            element.click();
+    }
 
-	public void DismissAlertIfPresent() {
+    public static void selectRadioButton(WebElement element) {
+        if (!isSelected(element))
+            element.click();
+    }
 
-		if (!isAlertPresent())
-			return;
-		DismissAlert();
-	}
-	
-	public void AcceptPrompt(String text) {
-		
-		if (!isAlertPresent())
-			return;
-		
-		Alert alert = getAlert();
-		alert.sendKeys(text);
-		alert.accept();
-	}
+    public static void deselectRadioButton(WebElement element) {
+        if (isSelected(element))
+            element.click();
+    }
 
-	public void scrollToElemet(WebElement element) {
-		Waits.tryJavascript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
-	}
-	
-	public void scrollToElemetAndClick(WebElement element) {
-		scrollToElemet(element);
-		element.click();
-	}
+    // ------------------ General Element States ------------------
+    public static boolean isEnabled(WebElement element) {
+        return element.isEnabled();
+    }
 
-	public void scrollIntoView(WebElement element) {
-		Waits.tryJavascript("arguments[0].scrollIntoView()", element);
-	}
+    public static boolean isDisplayed(WebElement element) {
+        return element.isDisplayed();
+    }
 
-	public void scrollIntoViewAndClick(WebElement element) {
-		scrollIntoView(element);
-		element.click();
-	}
-	
-	public void scrollDownVertically() {
-		Waits.tryJavascript("window.scrollTo(0, document.body.scrollHeight)");
-	}
+    // ------------------ Dropdown Methods ------------------
+    public static void selectByText(WebElement element, String text) {
+        new Select(element).selectByVisibleText(text);
+    }
 
-	public void scrollUpVertically() {
-		Waits.tryJavascript("window.scrollTo(0, -document.body.scrollHeight)");
-	}
+    public static void selectByIndex(WebElement element, int index) {
+        new Select(element).selectByIndex(index);
+    }
 
-	public void scrollDownByPixel() {
-		Waits.tryJavascript("window.scrollBy(0,1500)");
-	}
+    public static void selectByValue(WebElement element, String value) {
+        new Select(element).selectByValue(value);
+    }
 
-	public void scrollUpByPixel() {
-		Waits.tryJavascript("window.scrollBy(0,-1500)");
-	}
+    public static String getFirstSelectedOption(WebElement element) {
+        return new Select(element).getFirstSelectedOption().getText();
+    }
 
-	public void ZoomInBypercentage() {
-		Waits.tryJavascript("document.body.style.zoom='40%'");
-	}
+    public static List<WebElement> getAllSelectedOptions(WebElement element) {
+        return new Select(element).getAllSelectedOptions();
+    }
 
-	public void ZoomBy100percentage() {
-		Waits.tryJavascript("document.body.style.zoom='100%'");
-	}
+    public static List<WebElement> getAllOptions(WebElement element) {
+        return new Select(element).getOptions();
+    }
+
+    public static void deselectByText(WebElement element, String text) {
+        new Select(element).deselectByVisibleText(text);
+    }
+
+    public static void deselectByIndex(WebElement element, int index) {
+        new Select(element).deselectByIndex(index);
+    }
+
+    public static void deselectByValue(WebElement element, String value) {
+        new Select(element).deselectByValue(value);
+    }
+
+    // ------------------ Click Methods ------------------
+    public static void click(WebElement element) {
+        waitUntilVisible(element, 10);
+        element.click();
+    }
+
+    public static void clickIfVisible(WebElement element) {
+        if (isDisplayed(element))
+            element.click();
+    }
+
+    // ------------------ Alert Methods ------------------
+    public static Alert getAlert() {
+        return Base.driver.switchTo().alert();
+    }
+
+    public static void acceptAlert() {
+        getAlert().accept();
+    }
+
+    public static void dismissAlert() {
+        getAlert().dismiss();
+    }
+
+    public static String getAlertText() {
+        return getAlert().getText();
+    }
+
+    public static boolean isAlertPresent() {
+        try {
+            Base.driver.switchTo().alert();
+            return true;
+        } catch (NoAlertPresentException e) {
+            return false;
+        }
+    }
+
+    public static void acceptAlertIfPresent() {
+        if (isAlertPresent()) acceptAlert();
+    }
+
+    public static void dismissAlertIfPresent() {
+        if (isAlertPresent()) dismissAlert();
+    }
+
+    public static void acceptPrompt(String text) {
+        if (isAlertPresent()) {
+            Alert alert = getAlert();
+            alert.sendKeys(text);
+            alert.accept();
+        }
+    }
+
+    // ------------------ Scroll Methods ------------------
+    public static void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    public static void scrollToElementAndClick(WebElement element) {
+        scrollToElement(element);
+        element.click();
+    }
+
+    public static void scrollDownVertically() {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("window.scrollTo(0, document.body.scrollHeight)");
+    }
+
+    public static void scrollUpVertically() {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+    }
+
+    public static void scrollDownByPixel(int pixels) {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("window.scrollBy(0," + pixels + ")");
+    }
+
+    public static void scrollUpByPixel(int pixels) {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("window.scrollBy(0,-" + pixels + ")");
+    }
+
+    // ------------------ Zoom Methods ------------------
+    public static void zoomInByPercentage(int percentage) {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("document.body.style.zoom='" + percentage + "%'");
+    }
+
+    public static void zoomTo100() {
+        ((JavascriptExecutor) Base.driver)
+                .executeScript("document.body.style.zoom='100%'");
+    }
+
+    // ------------------ Wait ------------------
+    public static void waitUntilVisible(WebElement element, int timeoutSeconds) {
+        getWait(timeoutSeconds).until(ExpectedConditions.visibilityOf(element));
+    }
 
 }
