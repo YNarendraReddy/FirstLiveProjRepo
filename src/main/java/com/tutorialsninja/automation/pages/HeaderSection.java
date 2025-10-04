@@ -19,4 +19,7 @@ public HeaderSection() {
 
 	@FindBy(xpath="//ul[@class='dropdown-menu dropdown-menu-right']//a[normalize-space()='Register']")
 	public static WebElement register;
+	
+	@FindBy(xpath="//a[normalize-space()='Login']")
+	public static WebElement login;
 }
