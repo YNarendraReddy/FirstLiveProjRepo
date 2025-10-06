@@ -22,4 +22,11 @@ public HeaderSection() {
 	
 	@FindBy(xpath="//a[normalize-space()='Login']")
 	public static WebElement login;
+	
+	@FindBy(xpath="//input[@placeholder='Search']")
+	public static WebElement searchboxfield;
+	
+	@FindBy(xpath="//button[@class='btn btn-default btn-lg']")
+	public static WebElement searchbutton;
+	
 }
